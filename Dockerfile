@@ -1,6 +1,6 @@
 FROM debian:bullseye-slim
 
-ENV FACTORIO_VERSION="1.1.69"
+ENV FACTORIO_VERSION="1.1.74"
 
 WORKDIR /usr/src/app
 
