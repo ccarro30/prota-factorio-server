@@ -9,3 +9,4 @@ services:
       - ./saves:/opt/factorio/saves
       - ./mods:/opt/factorio/mods
       - ./config:/opt/factorio/config
+    network_mode: "host"
