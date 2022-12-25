@@ -5,3 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    volumes:
+      - ./saves:/opt/factorio/saves
+      - ./mods:/opt/factorio/mods
+      - ./config:/opt/factorio/config
