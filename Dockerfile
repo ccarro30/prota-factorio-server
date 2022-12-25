@@ -25,13 +25,20 @@ RUN wget \
     -c "https://www.factorio.com/get-download/${FACTORIO_VERSION}/headless/linux64" \
     -O "factorio_headless_x64_${FACTORIO_VERSION}.tar.xz"
 
-# Bootstrap Server and User
+# Bootstrap Server
 RUN \
     tar -xJf "factorio_headless_x64_${FACTORIO_VERSION}.tar.xz" -C /opt && \
     rm "factorio_headless_x64_${FACTORIO_VERSION}.tar.xz" && \
     mkdir -p /opt/factorio/saves && \
     mkdir -p /opt/factorio/mods && \
-    mkdir -p /opt/factorio/config && \
+    mkdir -p /opt/factorio/config
+
+COPY ./saves* /opt/factorio/saves
+COPY ./mods* /opt/factorio/mods
+COPY ./config* /opt/factorio/config
+
+# Bootstrap User
+RUN \
     adduser $SERVER_USER && \
     chown -R $SERVER_USER:$SERVER_USER /opt/factorio && \
     chown -R $SERVER_USER:$SERVER_USER /usr/src/app
