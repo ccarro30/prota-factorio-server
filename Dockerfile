@@ -2,10 +2,10 @@ FROM debian:bullseye-slim
 
 # Build and Runtime Variables
 ENV \
-  FACTORIO_VERSION="1.1.74" \
-  SERVER_PORT="34197" \
-  SERVER_USER="factorio" \
-  SAVE_NAME="my-save.zip"
+    FACTORIO_VERSION="1.1.74" \
+    SERVER_PORT="34197" \
+    SERVER_USER="factorio" \
+    SAVE_NAME="my-save.zip"
 
 WORKDIR /usr/src/app
 
@@ -33,9 +33,11 @@ RUN \
     mkdir -p /opt/factorio/mods && \
     mkdir -p /opt/factorio/config
 
+# Optionally copy persistent data
 COPY ./saves* /opt/factorio/saves
 COPY ./mods* /opt/factorio/mods
 COPY ./config* /opt/factorio/config
+COPY ./misc* /opt/factorio
 
 # Bootstrap User
 RUN \
