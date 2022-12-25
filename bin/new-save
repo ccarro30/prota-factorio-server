@@ -1,0 +1,4 @@
+#!/bin/bash
+
+echo "Creating New Save..."
+/opt/factorio/bin/x64/factorio --create "/opt/factorio/saves/$SAVE_NAME"

@@ -1,0 +1,7 @@
+#!/bin/bash
+
+echo "Detected Local IP: $(hostname -I)"
+echo "Detected Port: $SERVER_PORT"
+
+echo "Starting Server..."
+/opt/factorio/bin/x64/factorio --start-server "/opt/factorio/saves/$SAVE_NAME"
