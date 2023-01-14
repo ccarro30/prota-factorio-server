@@ -15,6 +15,7 @@ COPY ./bin ./bin
 # Update and Install Packages
 RUN \
     apt-get update && \
+    apt-get upgrade && \
     apt-get install -y \
         wget \
         xz-utils
