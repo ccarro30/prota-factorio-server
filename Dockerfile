@@ -2,7 +2,7 @@ FROM debian:bullseye-slim
 
 # Build and Runtime Variables
 ENV \
-    FACTORIO_VERSION="1.1.74" \
+    FACTORIO_VERSION="1.1.76" \
     SERVER_PORT="34197" \
     SERVER_USER="factorio" \
     SAVE_NAME="my-save.zip"
@@ -42,7 +42,7 @@ COPY ./misc* /opt/factorio
 
 # Bootstrap User
 RUN \
-    adduser $SERVER_USER && \
+    useradd -ms /bin/bash $SERVER_USER && \
     chown -R $SERVER_USER:$SERVER_USER /opt/factorio && \
     chown -R $SERVER_USER:$SERVER_USER /usr/src/app
 
