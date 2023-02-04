@@ -1,0 +1,13 @@
+#!/bin/bash
+
+echo "Copying map-gen-settings.json..."
+cp /opt/factorio/data/map-gen-settings.example.json /opt/factorio/config/map-gen-settings.json
+
+echo "Copying map-settings.json..."
+cp /opt/factorio/data/map-settings.example.json /opt/factorio/config/map-settings.json
+
+echo "Copying server-settings.json..."
+cp /opt/factorio/data/server-settings.example.json /opt/factorio/config/server-settings.json
+
+echo "Copying server-whitelist.json..."
+cp /opt/factorio/data/server-whitelist.example.json /opt/factorio/config/server-whitelist.json
