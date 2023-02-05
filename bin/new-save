@@ -1,4 +1,16 @@
 #!/bin/bash
 
-echo "Creating New Save..."
-/opt/factorio/bin/x64/factorio --create "/opt/factorio/saves/$SAVE_NAME"
+save_gen () {
+    echo "Creating New Save..."
+    /opt/factorio/bin/x64/factorio --create "/opt/factorio/saves/$SAVE_NAME" 2>&1 1>/dev/null
+    echo "Done!"
+}
+
+if [ -f "/opt/factorio/saves/$SAVE_NAME" ]; then
+    read -p "Save Game $SAVE_NAME exists. Overwrite? (N/y) : " save_ans
+    if [ "$save_ans" = "y" ] || [ "$save_ans" = "Y" ]; then
+        save_gen
+    fi
+else
+    save_gen
+fi

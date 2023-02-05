@@ -1,13 +1,76 @@
 #!/bin/bash
 
-echo "Copying map-gen-settings.json..."
-cp /opt/factorio/data/map-gen-settings.example.json /opt/factorio/config/map-gen-settings.json
+config_ini () {
+    echo "Initializing server config.ini"
+    /opt/factorio/bin/x64/factorio --start-server null 2>&1 1>/dev/null
+    sed -i "s/\; port=34197/port=$SERVER_PORT/g" /opt/factorio/config/config.ini
+    rm /opt/factorio/mods/mod-list.json
+}
 
-echo "Copying map-settings.json..."
-cp /opt/factorio/data/map-settings.example.json /opt/factorio/config/map-settings.json
+map_gen () {
+    echo "Copying map-gen-settings.json..."
+    cp /opt/factorio/data/map-gen-settings.example.json /opt/factorio/config/map-gen-settings.json
+}
 
-echo "Copying server-settings.json..."
-cp /opt/factorio/data/server-settings.example.json /opt/factorio/config/server-settings.json
+map_set () {
+    echo "Copying map-settings.json..."
+    cp /opt/factorio/data/map-settings.example.json /opt/factorio/config/map-settings.json
+}
 
-echo "Copying server-whitelist.json..."
-cp /opt/factorio/data/server-whitelist.example.json /opt/factorio/config/server-whitelist.json
+server_set () {
+    echo "Copying server-settings.json..."
+    cp /opt/factorio/data/server-settings.example.json /opt/factorio/config/server-settings.json
+}
+
+whitelist_set () {
+    echo "Copying server-whitelist.json..."
+    cp /opt/factorio/data/server-whitelist.example.json /opt/factorio/config/server-whitelist.json
+}
+
+if [ -f "/opt/factorio/config/config.ini" ]; then
+    read -p "File config.ini exists. Overwrite? (Y/n) : " config_ans
+    if [ "$config_ans" != "n" ] && [ "$config_ans" != "N" ]; then
+        config_ini
+    fi
+else
+    config_ini
+fi
+
+if [ -f "/opt/factorio/config/map-gen-settings.json" ]; then
+    read -p "File map-gen-settings.json exists. Overwrite? (Y/n) : " map_gen_ans
+    if [ "$map_gen_ans" != "n" ] && [ "$map_gen_ans" != "N" ]; then
+        map_gen
+    fi
+else
+    map_gen
+fi
+
+if [ -f "/opt/factorio/config/map-settings.json" ]; then
+    read -p "File map-settings.json exists. Overwrite? (Y/n) : " map_ans
+    if [ "$map_ans" != "n" ] && [ "$map_ans" != "N" ]; then
+        map_set
+    fi
+else
+    map_set
+fi
+
+if [ -f "/opt/factorio/config/server-settings.json" ]; then
+    read -p "File server-settings.json exists. Overwrite? (Y/n) : " server_ans
+    if [ "$server_ans" != "n" ] && [ "$server_ans" != "N" ]; then
+        server_set
+    fi
+else
+    server_set
+fi
+
+if [ -f "/opt/factorio/config/server-whitelist.json" ]; then
+    read -p "File server-whitelist.json exists. Overwrite? (Y/n) : " whitelist_ans
+    if [ "$whitelist_ans" != "n" ] && [ "$whitelist_ans" != "N" ]; then
+        whitelist_set
+    fi
+else
+    read -p "Do you want to enable a whitelist for this server? (N/y) : " whitelist_en
+    if [ "$whitelist_en" = "y" ] || [ "$whitelist_en" = "Y" ]; then
+        whitelist_set
+    fi
+fi
