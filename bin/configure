@@ -23,8 +23,18 @@ server_set () {
 }
 
 whitelist_set () {
-    echo "Copying server-whitelist.json..."
-    cp /opt/factorio/data/server-whitelist.example.json /opt/factorio/config/server-whitelist.json
+    echo "Creating server-whitelist.json..."
+    echo "[]" >> /opt/factorio/config/server-whitelist.json
+}
+
+banlist_set () {
+    echo "Creating server-banlist.json..."
+    echo "[]" >> /opt/factorio/config/server-banlist.json
+}
+
+adminlist_set () {
+    echo "Creating server-adminlist.json..."
+    echo "[]" >> /opt/factorio/config/server-adminlist.json
 }
 
 if [ -f "/opt/factorio/config/config.ini" ]; then
@@ -69,8 +79,23 @@ if [ -f "/opt/factorio/config/server-whitelist.json" ]; then
         whitelist_set
     fi
 else
-    read -p "Do you want to enable a whitelist for this server? (N/y) : " whitelist_en
-    if [ "$whitelist_en" = "y" ] || [ "$whitelist_en" = "Y" ]; then
-        whitelist_set
+    whitelist_set
+fi
+
+if [ -f "/opt/factorio/config/server-banlist.json" ]; then
+    read -p "File server-banlist.json exists. Overwrite? (Y/n) : " banlist_ans
+    if [ "$banlist_ans" != "n" ] && [ "$banlist_ans" != "N" ]; then
+        banlist_set
     fi
+else
+    banlist_set
+fi
+
+if [ -f "/opt/factorio/config/server-adminlist.json" ]; then
+    read -p "File server-adminlist.json exists. Overwrite? (Y/n) : " adminlist_ans
+    if [ "$adminlist_ans" != "n" ] && [ "$adminlist_ans" != "N" ]; then
+        adminlist_set
+    fi
+else
+    adminlist_set
 fi
