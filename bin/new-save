@@ -2,9 +2,33 @@
 
 save_gen () {
     echo "Creating New Save..."
-    /opt/factorio/bin/x64/factorio --create "/opt/factorio/saves/$SAVE_NAME" 2>&1 1>/dev/null
+    eval "$create_command 2>&1 1>/dev/null"
     echo "Done!"
 }
+
+create_command="/opt/factorio/bin/x64/factorio --create /opt/factorio/saves/$SAVE_NAME"
+
+if [ ! -f "/opt/factorio/config/map-gen-settings.json" ]; then
+    read -p "Unable to find map-gen-settings.json. Proceed? (Y/n) : " gen_ans
+    if [ "$gen_ans" = "n" ] || [ "$gen_ans" = "N" ]; then
+        echo "Exiting..."
+        exit 1
+    fi
+else
+    echo "Adding map-gen-settings flag for save generation."
+    create_command="$create_command --map-gen-settings /opt/factorio/config/map-gen-settings.json"
+fi
+
+if [ ! -f "/opt/factorio/config/map-settings.json" ]; then
+    read -p "Unable to find map-settings.json. Proceed? (Y/n) : " map_ans
+    if [ "$map_ans" = "n" ] || [ "$map_ans" = "N" ]; then
+        echo "Exiting..."
+        exit 1
+    fi
+else
+    echo "Adding map-settings flag for save generation."
+    create_command="$create_command --map-settings /opt/factorio/config/map-settings.json"
+fi
 
 if [ -f "/opt/factorio/saves/$SAVE_NAME" ]; then
     read -p "Save Game $SAVE_NAME exists. Overwrite? (N/y) : " save_ans
