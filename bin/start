@@ -1,7 +1,38 @@
 #!/bin/bash
 
-echo "Detected Local IP: $(hostname -I)"
-echo "Detected Port: $SERVER_PORT"
+start_server () {
+    echo "Detected Local IP: $(hostname -I)"
+    echo "Detected Port: $SERVER_PORT"
+    /opt/factorio/bin/x64/factorio --version
+    eval "$start_command"
+}
 
-echo "Starting Server..."
-/opt/factorio/bin/x64/factorio --start-server "/opt/factorio/saves/$SAVE_NAME"
+start_command="/opt/factorio/bin/x64/factorio --start-server /opt/factorio/saves/$SAVE_NAME --console-log /opt/factorio/log/server-logs.log"
+
+if [ ! -f "/opt/factorio/config/server-settings.json" ]; then
+    read -p "Unable to find server-settings.json. Proceed? (Y/n) : " server_start_ans
+    if [ "$server_start_ans" = "n" ] || [ "$server_start_ans" = "N" ]; then
+        echo "Exiting..."
+        exit 1
+    fi
+else
+    echo "Adding server-settings flag for server start."
+    start_command="$start_command --server-settings /opt/factorio/config/server-settings.json"
+fi
+
+if [ -f "/opt/factorio/config/server-whitelist.json" ]; then
+    echo "Adding server-whitelist flag for server start."
+    start_command="$start_command --use-server-whitelist --server-whitelist /opt/factorio/config/server-whitelist.json"
+fi
+
+if [ -f "/opt/factorio/config/server-banlist.json" ]; then
+    echo "Adding server-banlist flag for server start."
+    start_command="$start_command --server-banlist /opt/factorio/config/server-banlist.json"
+fi
+
+if [ -f "/opt/factorio/config/server-adminlist.json" ]; then
+    echo "Adding server-adminlist flag for server start."
+    start_command="$start_command --server-adminlist /opt/factorio/config/server-adminlist.json"
+fi
+
+start_server

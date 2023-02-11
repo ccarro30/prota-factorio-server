@@ -46,12 +46,14 @@ COPY --from=init /opt/factorio /opt/factorio
 RUN \
     mkdir -p /opt/factorio/saves && \
     mkdir -p /opt/factorio/mods && \
-    mkdir -p /opt/factorio/config
+    mkdir -p /opt/factorio/config && \
+    mkdir -p /opt/factorio/log
 
 # Optionally copy in any persistent data
 COPY ./saves* /opt/factorio/saves
 COPY ./mods* /opt/factorio/mods
 COPY ./config* /opt/factorio/config
+COPY ./log* /opt/factorio/log
 
 # Bootstrap server process user
 RUN \
