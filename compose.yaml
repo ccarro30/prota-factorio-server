@@ -5,6 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      target: server
     image: fac_server
     volumes:
       - ./saves:/opt/factorio/saves

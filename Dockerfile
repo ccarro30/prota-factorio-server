@@ -1,32 +1,49 @@
-FROM debian:bullseye-slim
+# Intermediate stage for acquiring server files
+FROM debian:bullseye-slim AS init
 
-# Build and runtime variables
+# Build arguments
+ARG FACTORIO_VERSION="1.1.76"
+
+# Install build-time packages
+RUN \
+    apt-get update && \
+    apt-get install -y \
+        wget \
+        xz-utils
+
+# Download and unpack server files
+RUN \
+    wget \
+      --progress=bar:force:noscroll \
+      -c "https://www.factorio.com/get-download/${FACTORIO_VERSION}/headless/linux64" \
+      -O "factorio_headless_x64_${FACTORIO_VERSION}.tar.xz" && \
+    tar -xJf "factorio_headless_x64_${FACTORIO_VERSION}.tar.xz" -C /opt && \
+    rm "factorio_headless_x64_${FACTORIO_VERSION}.tar.xz"
+
+# Stage for final server image; Improves image size and allows for build parallelism
+FROM debian:bullseye-slim AS server
+
+# Runtime variables
 ENV \
-    FACTORIO_VERSION="1.1.76" \
     SERVER_PORT="34197" \
     SERVER_USER="factorio" \
     SAVE_NAME="my-save.zip"
 
 WORKDIR /usr/src/app
 
-# Update and install packages
+# Update base image packages
 RUN \
     apt-get update && \
-    apt-get upgrade && \
-    apt-get install -y \
-        wget \
-        xz-utils
+    apt-get upgrade
 
-# Download server files
-RUN wget \
-    --progress=bar:force:noscroll \
-    -c "https://www.factorio.com/get-download/${FACTORIO_VERSION}/headless/linux64" \
-    -O "factorio_headless_x64_${FACTORIO_VERSION}.tar.xz"
+# Copy scripts to container
+COPY ./bin ./bin
 
-# Bootstrap server
+# Copy factorio base files from intermediate stage
+COPY --from=init /opt/factorio /opt/factorio
+
+# Add in supporting directories
 RUN \
-    tar -xJf "factorio_headless_x64_${FACTORIO_VERSION}.tar.xz" -C /opt && \
-    rm "factorio_headless_x64_${FACTORIO_VERSION}.tar.xz" && \
     mkdir -p /opt/factorio/saves && \
     mkdir -p /opt/factorio/mods && \
     mkdir -p /opt/factorio/config
@@ -35,10 +52,6 @@ RUN \
 COPY ./saves* /opt/factorio/saves
 COPY ./mods* /opt/factorio/mods
 COPY ./config* /opt/factorio/config
-COPY ./misc* /opt/factorio
-
-# Copy scripts to container
-COPY ./bin ./bin
 
 # Bootstrap server process user
 RUN \
@@ -46,6 +59,8 @@ RUN \
     chown -R $SERVER_USER:$SERVER_USER /opt/factorio && \
     chown -R $SERVER_USER:$SERVER_USER /usr/src/app
 
+# Set server process user as active user
 USER $SERVER_USER
 
+# Expose container on port specified
 EXPOSE $SERVER_PORT/udp
