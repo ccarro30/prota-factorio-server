@@ -7,6 +7,7 @@ start_server () {
     eval "$start_command"
 }
 
+SAVE_NAME="$(echo $SAVE_NAME | sed 's/ /\\\ /g')"
 start_command="/opt/factorio/bin/x64/factorio --start-server /opt/factorio/saves/$SAVE_NAME --console-log /opt/factorio/log/server-logs.log"
 
 if [ ! -f "/opt/factorio/config/server-settings.json" ]; then

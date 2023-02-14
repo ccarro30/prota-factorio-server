@@ -6,6 +6,7 @@ save_gen () {
     echo "Done!"
 }
 
+SAVE_NAME="$(echo $SAVE_NAME | sed 's/ /\\\ /g')"
 create_command="/opt/factorio/bin/x64/factorio --create /opt/factorio/saves/$SAVE_NAME"
 
 if [ ! -f "/opt/factorio/config/map-gen-settings.json" ]; then
