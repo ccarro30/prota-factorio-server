@@ -34,7 +34,7 @@ WORKDIR /usr/src/app
 # Update base image packages
 RUN \
     apt-get update && \
-    apt-get upgrade
+    apt-get upgrade -y
 
 # Copy scripts to container
 COPY ./bin ./bin
