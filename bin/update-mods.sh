@@ -18,7 +18,7 @@ MODS=( $(find $MOD_DIRECTORY -regex '.+[0-9]+\.[0-9]+\.[0-9]+\.zip$' -exec basen
 for MOD in ${MODS[@]}
 do
     # Parse local mod
-    NAME_HTTP=$(echo $MOD | awk -F_ '{NF--; print}')
+    NAME_HTTP=$(basename ${MOD%_*})
     NAME_FRIENDLY=$(echo $NAME_HTTP | sed 's/%20/ /g')
     LOCAL_VERSION=$(echo $MOD | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
 
@@ -43,11 +43,13 @@ do
             echo "Error: $NEW_MOD_FILE could not be downloaded. Remote host returned non-successful HTTP code."
         elif [[ $MOD_REMOTE_SHA1_LATEST != $MOD_LOCAL_SHA1_LATEST ]]; then
             rm -f "$MOD_DIRECTORY/$NEW_MOD_FILE"
-            echo "Error: $NEW_MOD_FILE SHA1 does not match remote host. Download incomplete of tampered with."
+            echo "Error: $NEW_MOD_FILE SHA1 does not match remote host. Download incomplete or tampered with."
         else
             rm -f "$MOD_DIRECTORY/$OLD_MOD_FILE"
             echo "Update complete for $NAME_FRIENDLY!"
         fi
+    else
+        echo "$NAME_FRIENDLY is at the latest version ($LOCAL_VERSION)."
     fi
 done
 
