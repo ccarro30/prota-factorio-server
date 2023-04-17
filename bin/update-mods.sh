@@ -29,7 +29,7 @@ do
 
     # Compare if remote mod is more recent than local
     if [[ (($MOD_REMOTE_VERSION_LATEST > $LOCAL_VERSION)) ]]; then
-        echo "Updating $NAME_FRIENDLY from ($LOCAL_VERSION -> $MOD_REMOTE_VERSION_LATEST)..."
+        echo "[PENDING]: Updating $NAME_FRIENDLY from ($LOCAL_VERSION -> $MOD_REMOTE_VERSION_LATEST)..."
         OLD_MOD_FILE="${NAME_FRIENDLY}_${LOCAL_VERSION}.zip"
         NEW_MOD_FILE="${NAME_FRIENDLY}_${MOD_REMOTE_VERSION_LATEST}.zip"
         MOD_REMOTE_URL_LATEST=$(echo "$MOD_LATEST_RESPONSE" | jq -r '.download_url')
@@ -40,16 +40,16 @@ do
         # Simple error checking for downloading
         if [[ "$HTTP_CODE" != *"200"* ]]; then
             rm -f "$MOD_DIRECTORY/$NEW_MOD_FILE"
-            echo "Error: $NEW_MOD_FILE could not be downloaded. Remote host returned non-successful HTTP code."
+            echo "[ERROR]: $NEW_MOD_FILE could not be downloaded. Remote host returned non-successful HTTP code."
         elif [[ $MOD_REMOTE_SHA1_LATEST != $MOD_LOCAL_SHA1_LATEST ]]; then
             rm -f "$MOD_DIRECTORY/$NEW_MOD_FILE"
-            echo "Error: $NEW_MOD_FILE SHA1 does not match remote host. Download incomplete or tampered with."
+            echo "[ERROR]: $NEW_MOD_FILE SHA1 does not match remote host. Download incomplete or tampered with."
         else
             rm -f "$MOD_DIRECTORY/$OLD_MOD_FILE"
-            echo "Update complete for $NAME_FRIENDLY!"
+            echo "[DONE]: Update completed for $NAME_FRIENDLY!"
         fi
     else
-        echo "$NAME_FRIENDLY is at the latest version ($LOCAL_VERSION)."
+        echo "[SKIPPED]: $NAME_FRIENDLY is at the latest version ($LOCAL_VERSION)."
     fi
 done
 
