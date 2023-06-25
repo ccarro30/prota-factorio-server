@@ -26,17 +26,24 @@ repository to the hosting location.
     - If you don't want to use mods, leaving it empty is fine
 3. Build the Docker project: `docker-compose build main-server`
 4. Add a new save game using: `docker-compose run main-server ./bin/new-save`
-5. Start the server using: `docker-compose run main-server ./bin/start`
+5. Start the server using: `docker-compose run -d main-server ./bin/start`
 
 #### What if I want to use an existing save game?
 1. Proceed with steps 1 and 2 of the above [Minimal Change Setup](#minimal-change-setup).
 2. Add in the existing save game .zip archive into the `./saves` directory.
 3. Change the Dockerfile ENV `SAVE_NAME` to the name of your save file.
 4. Build the Docker project: `docker-compose build main-server`
-5. Start the server using: `docker-compose run main-server ./bin/start`
+5. Start the server using: `docker-compose run -d main-server ./bin/start`
 
 ### Customized or Multi-Instance Setup
-
+Here are some recommendations when it comes to hosting multiple instances of this project on one machine.
+These are only recommendations.
+- Keep a separate instance of this project for each "server" you would like to set up
+- Modify the `image:` line in `compose.yaml` to avoid build collisions in `docker-compose build`
+  - Provide a descriptive name there for each instance set up to keep track of them via Docker
+- Host each instance on a different port number by modifying the Dockerfile ENV "SERVER_PORT"
+- After considering the above, change to the directory of your choosing and continue with the
+  [Minimal Change Setup](#minimal-change-setup).
 
 ### External Access / Routing
 If you want others on the public internet to connect to your server, you will need to take the
@@ -59,6 +66,31 @@ various community sites may be able to assist with specific issues.
 Whether you are self hosting or hosting on the cloud, a Static IP (or Dynamic DNS) is always recommended 
 in order for external users to be able to consistently connect to your instance. Consumer ISPs and Cloud
 Hosting services often have the right to change your non-static publicly facing IP without warning.
+
+### Updating
+I'm still working out a better solution to pulling down new versions of this project as a whole. But when
+it comes to updating or changing the Factorio version the server is running or updating any mods, it is trivial 
+to do this maintenance yourself.
+
+#### Change Factorio Version
+1. Stop the server using `docker-compose down` in the directory of your instance
+2. Modify the Dockerfile ARG `FACTORIO_VERSION` to the version of your choosing
+3. Build the Docker project: `docker-compose build main-server`
+4. Start the server again using: `docker-compose run -d main-server ./bin/start`
+
+#### Update Mod Versions Automatically
+If you do not possess a `$FACTORIO_USER_ID` and/or `$FACTORIO_KEY` please visit https://www.factorio.com and
+login. Replace `$FACTORIO_USER_ID` with your Username and `$FACTORIO_KEY` with your Token.
+
+1. Stop any running server using `docker-compose down` in the directory of your instance
+2. If you've never built the server, do so: `docker-compose build main-server`
+3. Update the mods using: `docker-compose run main-server ./bin/update-mods.sh $FACTORIO_USER_ID $FACTORIO_KEY`
+4. Re-build the server: `docker-compose build main-server`
+5. Start the server again using: `docker-compose run -d main-server ./bin/start`
+
+### Server Logs
+Logs for a live server instance are exported using an bind mount to `./log/server-logs.log`. These can be
+streamed elsewhere if desired.
 
 ## Remarks and Comments
 I (Prota/ccarro30) am in no way affiliated with the development of the game Factorio or its 
