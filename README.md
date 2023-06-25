@@ -38,8 +38,31 @@ repository to the hosting location.
 ### Customized or Multi-Instance Setup
 
 
+### External Access / Routing
+If you want others on the public internet to connect to your server, you will need to take the
+appropriate steps yourself according to your setup to allow this to take place. These are loosely made 
+steps and will vary depending on your specific setup. If you need help beyond these general steps
+it is recommended to refer to your router's user guide or cloud hosting documentation. Otherwise
+various community sites may be able to assist with specific issues.
+
+#### Self Hosting
+- Open up firewall access on the container host using the same port number your container expects
+- Set up Port Forwarding on your internet facing router to direct traffic to the container host
+  on the same port number
+
+#### Cloud Hosting
+- Ensure the container or host can be accessed using a public address (may require attaching a public 
+  ip address to the instance)
+- Adjust the access control of the instance to allow traffic on the port your container expects
+
+#### Static IPs
+Whether you are self hosting or hosting on the cloud, a Static IP (or Dynamic DNS) is always recommended 
+in order for external users to be able to consistently connect to your instance. Consumer ISPs and Cloud
+Hosting services often have the right to change your non-static publicly facing IP without warning.
+
 ## Remarks and Comments
-I (Prota) am in no way affiliated with the development of the game Factorio or its studio 
-Wube Software. This software is provided as-is, and there is no expectation or guarantee of
-support. This is a hobby project for the benefit of the Factorio and Docker community, 
-and there is currently no way to donate or support this project financially.
+I (Prota/ccarro30) am in no way affiliated with the development of the game Factorio or its 
+studio Wube Software. This software is provided as-is, and there is no expectation or guarantee of
+support by myself or any other contributors to this project. This is a hobby project for the benefit 
+of the Factorio and Docker community, and there is currently no way to donate or support this 
+project financially.
