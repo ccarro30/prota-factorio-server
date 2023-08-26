@@ -12,7 +12,7 @@ repository to the hosting location.
 
 ### Hosting Requirements
 - Docker
-- Docker Compose V1 (V2 may work fine but is currently untested)
+- Docker Compose V1 or V2
 - Git (optional but may be easier)
 - An internet connection of at least a 5+ Mbps download and upload speed per server instance
 (recommended but not necessarily required)
@@ -35,13 +35,15 @@ repository to the hosting location.
 4. Build the Docker project: `docker-compose build main-server`
 5. Start the server using: `docker-compose run -d main-server ./bin/start`
 
-### Customized or Multi-Instance Setup
+### Customized and/or Multi-Instance Setup
 Here are some recommendations when it comes to hosting multiple instances of this project on one machine.
 These are only recommendations.
 - Keep a separate instance of this project for each "server" you would like to set up
 - Modify the `image:` line in `compose.yaml` to avoid build collisions in `docker-compose build`
   - Provide a descriptive name there for each instance set up to keep track of them via Docker
 - Host each instance on a different port number by modifying the Dockerfile ENV "SERVER_PORT"
+- Optionally run `docker-compose run main-server ./bin/configure` for an interactive initializing of
+  administrative config files and CLI map generation parameters.
 - After considering the above, change to the directory of your choosing and continue with the
   [Minimal Change Setup](#minimal-change-setup).
 
@@ -70,7 +72,7 @@ Hosting services often have the right to change your non-static publicly facing 
 ### Updating
 I'm still working out a better solution to pulling down new versions of this project as a whole. But when
 it comes to updating or changing the Factorio version the server is running or updating any mods, it is trivial 
-to do this maintenance yourself.
+to do this maintenance yourself. More information below.
 
 #### Change Factorio Version
 1. Stop the server using `docker-compose down` in the directory of your instance

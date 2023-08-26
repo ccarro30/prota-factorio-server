@@ -2,7 +2,7 @@
 FROM debian:bullseye-slim AS init
 
 # Build arguments
-ARG FACTORIO_VERSION="1.1.80"
+ARG FACTORIO_VERSION="1.1.87"
 
 # Install build-time packages
 RUN \
